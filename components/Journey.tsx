@@ -58,7 +58,7 @@ export default function Journey() {
     <section ref={ref} id="journey" className="relative bg-ink text-paper">
       <div className="pointer-events-none absolute inset-0">
         <Image
-          src="/images/journey-contours.jpg"
+          src="/images/journey-contours.webp"
           alt=""
           fill
           aria-hidden

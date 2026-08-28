@@ -34,7 +34,7 @@ export default function Hero() {
       {/* background asset layer */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/hero-profile.jpg"
+          src="/images/hero-profile.webp"
           alt="A woman in profile, lit by a warm circular glow"
           fill
           priority

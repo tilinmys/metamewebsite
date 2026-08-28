@@ -48,7 +48,7 @@ export const FAQ_CLUSTERS: FAQCluster[] = [
     tab: "Clinical model",
     rail: "The clinical model",
     heading: "Preventive intelligence & architecture",
-    portal: "/images/faq_portal_01.jpg",
+    portal: "/images/faq_portal_01.webp",
     items: [
       {
         q: "What is Meta Me and how does it work?",
@@ -118,7 +118,7 @@ export const FAQ_CLUSTERS: FAQCluster[] = [
     tab: "Silent indicators",
     rail: "Silent indicators",
     heading: "Early biomarker & symptom detection",
-    portal: "/images/faq_portal_02.jpg",
+    portal: "/images/faq_portal_02.webp",
     items: [
       {
         q: "How does Meta Me detect diabetes risk before diagnosis?",
@@ -179,7 +179,7 @@ export const FAQ_CLUSTERS: FAQCluster[] = [
     tab: "Protocols",
     rail: "Screening protocols",
     heading: "Screening mechanics & wearable sync",
-    portal: "/images/faq_portal_03.jpg",
+    portal: "/images/faq_portal_03.webp",
     items: [
       {
         q: "What does a Meta Me assessment include?",
@@ -249,7 +249,7 @@ export const FAQ_CLUSTERS: FAQCluster[] = [
     tab: "Campus access",
     rail: "Campus & kiosk access",
     heading: "Decentralised kiosks & corporate care",
-    portal: "/images/faq_portal_04.jpg",
+    portal: "/images/faq_portal_04.webp",
     items: [
       {
         q: "How do I access Meta Me outside major cities?",

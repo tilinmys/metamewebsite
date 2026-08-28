@@ -255,7 +255,7 @@ export default function SelfStackingDeck() {
             style={{ opacity: i === 0 ? 1 : 0 }}
           >
             <Image
-              src={`/images/${f}.jpg`}
+              src={`/images/${f}.webp`}
               alt=""
               aria-hidden
               fill

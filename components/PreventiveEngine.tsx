@@ -114,7 +114,7 @@ export default function PreventiveEngine() {
           <video
             ref={videoRef}
             src="/videos/journey_overview.mp4"
-            poster="/videos/journey_overview_poster.jpg"
+            poster="/videos/journey_overview_poster.webp"
             muted
             loop
             playsInline

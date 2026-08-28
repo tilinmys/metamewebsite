@@ -66,7 +66,7 @@ export function siteSchema() {
           name: "My Stree",
           url: PARENT_ORIGIN,
         },
-        logo: `${ORIGIN}/images/hero-profile.jpg`,
+        logo: `${ORIGIN}/images/hero-profile.webp`,
         sameAs: SITE.sameAs,
       },
       {
