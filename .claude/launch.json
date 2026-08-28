@@ -4,8 +4,8 @@
     {
       "name": "meta-me",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "runtimeArgs": ["run", "dev", "--", "-p", "30001"],
+      "port": 30001
     }
   ]
 }
