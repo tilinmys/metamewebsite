@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #fcf4d9;
+  --ink: #282828;
+  --flame: #ed5b2d;
+  --rust: #b4370f;
+  --cadet: #8ba4bf;
+  --pumpkin: #ff833c;
+  --uranian: #bfe2fe;
+  --hairline: rgba(40, 40, 40, 0.14);
+}
+
+html {
+  background-color: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  /* clip (not hidden) so it never becomes a scroll container that breaks
+     position: sticky in descendant sections */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.kicker {
+  font-family: var(--font-serif), serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.accent-italic {
+  font-family: var(--font-script), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* clinical telemetry / index tag */
+.mono-tag {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* stacking deck — bring a hovered card to the front */
+.stack-card:hover,
+.stack-card:focus-visible {
+  z-index: 60;
+}
+
+/* stacking deck — static, readable fallback when motion is reduced */
+@media (prefers-reduced-motion: reduce) {
+  .deck-stage {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 4rem 1rem 3rem !important;
+  }
+  .deck-m-head {
+    position: static !important;
+    margin-bottom: 1.5rem;
+  }
+  .stack-card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin: 0 auto 1.5rem !important;
+  }
+  .deck-hint {
+    display: none;
+  }
+}
+
+/* fixed film grain — warmth + stops sections reading as flat AI fills */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  transform: translateZ(0);
+}
+
+/* slow ambient drift for the oversized petal motif */
+@keyframes petal-drift {
+  0% {
+    transform: rotate(0deg) translateY(0);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-14px);
+  }
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+}
+.petal-drift {
+  animation: petal-drift 22s ease-in-out infinite;
+}
+
+/* footer status indicator — a slow breath, not a blinking server LED */
+@keyframes soft-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+.soft-pulse {
+  animation: soft-pulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+.cue-bounce {
+  animation: cue-bounce 2s ease-in-out infinite;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--flame);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .petal-drift,
+  .cue-bounce,
+  .soft-pulse {
+    animation: none;
+  }
+}
