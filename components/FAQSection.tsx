@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -142,16 +142,7 @@ export default function FAQSection() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   const [openQ, setOpenQ] = useState<string | null>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
   const activeRef = useRef(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const on = () => setIsDesktop(mq.matches);
-    on();
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, []);
 
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
 
@@ -170,7 +161,7 @@ export default function FAQSection() {
   const tickY = useTransform(scrollYProgress, [0.04, 0.96], [0, ROW * 3]);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (reduce || (typeof window !== "undefined" && window.innerWidth < 1024)) return;
+    if (reduce) return;
     const idx = Math.max(0, Math.min(3, Math.floor(v * 3.999)));
     if (idx !== activeRef.current) {
       activeRef.current = idx;
@@ -184,7 +175,7 @@ export default function FAQSection() {
     setActive(i);
     setOpenQ(null);
     const el = track.current;
-    if (reduce || !el || window.innerWidth < 1024) return;
+    if (reduce || !el) return;
     const top = window.scrollY + el.getBoundingClientRect().top;
     const dur = el.offsetHeight - window.innerHeight;
     const target = Math.round(top + dur * (i / 4) + dur * 0.05);
@@ -196,16 +187,20 @@ export default function FAQSection() {
   const cluster = FAQ_CLUSTERS[active];
 
   return (
-    <section ref={track} id="faqs" className="relative bg-[#0e0e10] lg:h-[560vh]">
+    <section
+      ref={track}
+      id="faqs"
+      className="relative h-[420vh] bg-[#0e0e10] lg:h-[560vh]"
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema()) }}
       />
 
-      <div className="relative flex min-h-screen w-full items-center overflow-hidden lg:sticky lg:top-0 lg:h-screen">
+      <div className="sticky top-0 flex h-screen w-full items-start overflow-hidden pt-20 sm:pt-24 lg:items-center lg:pt-0">
         {/* background — full-bleed, cross-fades on scroll. no white wash. */}
         <div className="absolute inset-0 z-0">
-          {reduce || !isDesktop ? (
+          {reduce ? (
             <AnimatePresence mode="sync">
               <motion.div
                 key={cluster.portal}
@@ -252,6 +247,9 @@ export default function FAQSection() {
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0e0e10]/92 via-[#0e0e10]/45 to-transparent" />
           {/* just enough shade behind the right-hand nav */}
           <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-gradient-to-l from-[#0b0b0d]/50 to-transparent lg:block" />
+          {/* narrow screens: the text column spans the full width, so hold an
+              even wash over the whole portal for legibility */}
+          <div className="absolute inset-0 bg-[#0b0b0d]/55 lg:hidden" />
         </div>
 
         {/* content — heading + questions, upper-left */}
@@ -343,7 +341,7 @@ export default function FAQSection() {
               style={{
                 height: ROW - 12,
                 marginTop: 6,
-                y: reduce || !isDesktop ? active * ROW : tickY,
+                y: reduce ? active * ROW : tickY,
               }}
             />
             <div className="flex flex-col text-right">

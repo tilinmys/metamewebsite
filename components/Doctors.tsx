@@ -73,16 +73,7 @@ export default function Doctors() {
   const viewport = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const [isDesktop, setIsDesktop] = useState(false);
   const [travel, setTravel] = useState(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const on = () => setIsDesktop(mq.matches);
-    on();
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, []);
 
   // measure the real horizontal overflow so the strip lands with the last card
   // near the right edge on any viewport width — a fixed % can't do that.
@@ -97,11 +88,13 @@ export default function Doctors() {
     measure();
     window.addEventListener("resize", measure);
     const t = setTimeout(measure, 300); // after fonts settle
+    const t2 = setTimeout(measure, 700);
     return () => {
       window.removeEventListener("resize", measure);
       clearTimeout(t);
+      clearTimeout(t2);
     };
-  }, [isDesktop]);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: track,
@@ -109,19 +102,28 @@ export default function Doctors() {
   });
   // pixel-measured pan, driven directly by the (Lenis-smoothed) scroll —
   // a numeric useSpring on a "%" value silently breaks, so no spring here.
-  const x = useTransform(scrollYProgress, [0, 1], [0, -travel]);
+  // brief hold at each end so the first/last card can be read.
+  const x = useTransform(scrollYProgress, [0.06, 0.94], [0, -travel]);
 
-  // desktop always uses the pinned/clipped layout (no native-scrollbar flash);
-  // the transform itself just waits until the overflow has been measured.
-  const pan = isDesktop && !reduce;
+  // the scroll-linked pan now runs on every viewport; reduced motion falls
+  // back to a native swipe strip.
+  const pan = !reduce;
 
   return (
     <section
       ref={track}
       id="doctors"
-      className="relative border-t border-black/[0.06] bg-[#FBF8F1] lg:h-[200vh]"
+      className={`relative border-t border-black/[0.06] bg-[#FBF8F1] ${
+        pan ? "h-[250vh] lg:h-[200vh]" : ""
+      }`}
     >
-      <div className="flex min-h-[72vh] w-full flex-col justify-center overflow-hidden py-16 lg:min-h-screen lg:py-0 lg:sticky lg:top-0 lg:h-screen">
+      <div
+        className={
+          pan
+            ? "sticky top-0 flex h-screen w-full flex-col justify-center overflow-hidden"
+            : "flex min-h-[72vh] w-full flex-col justify-center overflow-hidden py-16"
+        }
+      >
         <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-12">
           <Reveal>
             <p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-[#B4370F]">

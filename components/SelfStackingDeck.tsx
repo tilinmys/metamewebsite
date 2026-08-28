@@ -119,22 +119,32 @@ export default function SelfStackingDeck() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
-      const build = (end: string, scrub: number) => {
-        cards.forEach((card) => {
-          gsap.set(card, {
-            xPercent: -50,
-            yPercent: -50,
-            x: 0,
-            y: window.innerHeight,
-            scale: 1,
-            force3D: true,
+      const build = (
+        end: string,
+        scrub: number,
+        dx: number,
+        dy: number,
+      ) => {
+        let vh = window.innerHeight;
+
+        // every card starts parked below the fold, dead-centre horizontally
+        const park = () => {
+          cards.forEach((card) => {
+            gsap.set(card, {
+              xPercent: -50,
+              yPercent: -50,
+              x: 0,
+              y: vh,
+              scale: 1,
+              force3D: true,
+            });
           });
-        });
+        };
+        park();
         gsap.set(bgs, { opacity: 0 });
         if (bgs[0]) gsap.set(bgs[0], { opacity: 1 });
 
         let activeBg = 0;
-        let vh = window.innerHeight;
         const cardStep = 1 / total;
 
         ScrollTrigger.create({
@@ -148,32 +158,31 @@ export default function SelfStackingDeck() {
           invalidateOnRefresh: true,
           onRefresh: () => {
             vh = window.innerHeight;
+            park();
           },
           onUpdate: (self) => {
             const progress = self.progress;
 
             for (let i = 0; i < total; i++) {
               const enterStart = i * cardStep;
-              const enterEnd = enterStart + cardStep;
-              const entryProgress = Math.min(
+              // 0 → 1 as this card travels from below into its slot; once it
+              // reaches 1 the slot is FIXED — placed cards never drift again.
+              const raw = Math.min(
                 Math.max((progress - enterStart) / cardStep, 0),
                 1,
               );
+              const p = 1 - Math.pow(1 - raw, 3); // easeOutCubic — soft landing
 
-              let y = (1 - entryProgress) * vh;
-              let x = 0;
-              let scale = 1;
+              const depth = total - 1 - i; // 0 = last card (front, dead-centre)
+              const restY = -depth * dy;
+              const restX = -depth * dx;
+              const restScale = 1 - depth * 0.04;
 
-              if (progress > enterEnd && i < total - 1) {
-                const stackProgress = (progress - enterEnd) / (1 - enterEnd);
-                const ramp = Math.min(stackProgress * 2, 1);
-                const depth = total - 1 - i;
-                y = -16 * depth * ramp;
-                x = -12 * depth * ramp;
-                scale = 1 - 0.03 * depth * ramp;
-              }
+              const y = (1 - p) * vh + p * restY;
+              const x = p * restX;
+              const scale = 1 - p * (1 - restScale);
 
-              gsap.set(cards[i], { x, y, scale, force3D: true, overwrite: "auto" });
+              gsap.set(cards[i], { x, y, scale, force3D: true });
             }
 
             // strata cross-fade
@@ -187,15 +196,25 @@ export default function SelfStackingDeck() {
         });
       };
 
-      mm.add("(min-width: 900px)", () => build("620%", 1));
-      mm.add("(max-width: 899px)", () => build("400%", 0.6));
+      //                              end     scrub  dx  dy
+      mm.add("(min-width: 900px)", () => build("620%", 1, 11, 18));
+      mm.add("(max-width: 899px)", () => build("460%", 0.5, 6, 14));
 
       return () => mm.revert();
     }, stage);
 
-    const id = window.setTimeout(() => ScrollTrigger.refresh(), 350);
+    // recalculate pin distances once layout has fully settled (images, fonts,
+    // mobile browser-chrome height) so the deck is aligned from the first frame
+    const t1 = window.setTimeout(() => ScrollTrigger.refresh(), 120);
+    const t2 = window.setTimeout(() => ScrollTrigger.refresh(), 600);
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", onLoad);
+    if (document.fonts?.ready) document.fonts.ready.then(onLoad);
+
     return () => {
-      window.clearTimeout(id);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.removeEventListener("load", onLoad);
       ctx.revert();
     };
   }, []);
