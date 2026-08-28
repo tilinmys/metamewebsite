@@ -1,8 +1,15 @@
 /**
- * "Led by clinicians" section — placeholder content for the demo.
- * Portraits are rendered as initial monograms; drop real images into
- * /public/images/doctor_<slug>.jpg later and set `photo` here.
- * Credentials / affiliations / blurbs are illustrative — replace before launch.
+ * "Led by clinicians" section.
+ *
+ * Ordered by seniority / experience. Portraits live in /public/images/ — drop
+ * the four files listed in `photo` below (4:5 headshots crop best). Until a
+ * file exists the card falls back to an initial monogram.
+ *
+ * `focus` sets object-position for the crop (default "50% 30%" favours the
+ * face); tweak per photo if a face sits high or low in frame.
+ *
+ * NOTE: Dr. Deekshita's credentials/blurb are placeholders — replace with her
+ * real Practo details.
  */
 export type Doctor = {
   slug: string;
@@ -12,38 +19,59 @@ export type Doctor = {
   role: string;
   affiliation: string;
   blurb: string;
+  languages?: string;
   photo?: string;
+  focus?: string;
 };
 
 export const DOCTORS: Doctor[] = [
   {
-    slug: "smitha-avula",
-    name: "Dr. Smitha Avula",
-    initials: "SA",
-    credentials: "MBBS · DNB · FFM · MBA (HHSM)",
+    slug: "smitha-ap",
+    name: "Dr. Smitha A. P.",
+    initials: "SP",
+    credentials: "MBBS · MS · DNB (OBG) · FFM · FRM · MBA",
     role: "Founder & High-Risk Obstetrician",
-    affiliation: "St. John's Medical College, Bengaluru",
+    affiliation: "23 years' experience · 15 as specialist",
     blurb:
-      "Founder of My Stree. Two decades in high-risk obstetrics and women's health; built Meta Me to move care upstream of diagnosis.",
+      "High-risk obstetrics and in-utero fetal programming, with a focus on endocrine disorders, recurrent pregnancy loss and bad obstetric history. Care that goes beyond the illness — evidence-based medicine matched with personalised attention. Alumna of Dr. B. R. Ambedkar Medical College; member of BSOG and ISUOG.",
+    languages: "English · Kannada · Tamil",
+    photo: "/images/doc-smitha.jpg",
+    focus: "50% 22%",
   },
   {
     slug: "surbhi-sinha",
     name: "Dr. Surbhi Sinha",
     initials: "SS",
-    credentials: "MBBS · MD, Internal Medicine",
-    role: "Preventive & Metabolic Physician",
-    affiliation: "Bangalore Medical College & Research Institute",
+    credentials: "MBBS · MS · MD · MRCOG (UK) · FRM",
+    role: "Co-Founder & Fertility Specialist",
+    affiliation: "MRCOG, United Kingdom",
     blurb:
-      "Leads the Meta Me clinical protocol — early metabolic and cardiometabolic risk, translated into a roadmap patients can actually follow.",
+      "Expert in advanced surgical techniques and fertility solutions, known for precision and empathy. Prioritises faster recovery and minimal discomfort — cutting-edge technique with compassionate care.",
+    photo: "/images/doc-surbhi.jpg",
+    focus: "50% 25%",
   },
   {
     slug: "priyanka-savina",
     name: "Priyanka Savina",
     initials: "PS",
-    credentials: "MSc, Clinical Nutrition · CDE",
-    role: "Lifestyle & Nutrition Lead",
-    affiliation: "Manipal Academy of Higher Education",
+    credentials: "M.Sc Nutrition & Dietetics · M.Sc Psychological Counselling · Certified Wellness Coach",
+    role: "Nutritionist & Wellness Consultant",
+    affiliation: "Postpartum nutrition · PCOS management",
     blurb:
-      "Designs the nutrition, sleep and habit-change side of every roadmap. Ten years across clinical and performance nutrition.",
+      "The architect of the seamless My Stree experience. Specialises in postpartum nutrition and PCOS management — from diet planning to lifestyle change, every step built around your body.",
+    photo: "/images/doc-priyanka.jpg",
+    focus: "50% 20%",
+  },
+  {
+    slug: "deekshita",
+    name: "Dr. Deekshita",
+    initials: "D",
+    credentials: "MBBS · MS (OBG)",
+    role: "Consultant Obstetrician & Gynaecologist",
+    affiliation: "Women's health & preventive care",
+    blurb:
+      "Consultant obstetrician and gynaecologist on the Meta Me team, focused on preventive women's health and early metabolic risk. (Placeholder bio — replace with Practo details.)",
+    photo: "/images/doc-deekshita.jpg",
+    focus: "50% 28%",
   },
 ];

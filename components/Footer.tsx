@@ -271,18 +271,18 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── the closing wordmark — centred, bleeding past both edges ── */}
+      {/* ── the closing wordmark — spans the full width, edges just kissed ── */}
       <div
         aria-hidden
         className="pointer-events-none relative w-full select-none overflow-hidden pt-9 lg:pt-12"
       >
         <div className="relative left-1/2 w-max -translate-x-1/2">
           <span
-            className="block whitespace-nowrap font-sans font-semibold leading-[0.82] text-[#F5EFDC]"
+            className="block whitespace-nowrap font-sans font-semibold leading-[0.85] text-[#F5EFDC]"
             style={{
-              fontSize: "clamp(4rem, 30vw, 30rem)",
-              letterSpacing: "-0.05em",
-              marginBottom: "-0.06em",
+              fontSize: "clamp(3.25rem, 26.5vw, 27rem)",
+              letterSpacing: "-0.04em",
+              marginBottom: "-0.04em",
             }}
           >
             {FOOTER.wordmark}

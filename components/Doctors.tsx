@@ -7,16 +7,26 @@ import Reveal from "./Reveal";
 import { DOCTORS, type Doctor } from "@/lib/doctors-data";
 
 function Portrait({ d }: { d: Doctor }) {
+  // show the photo when it exists; fall back to a monogram if the file is
+  // missing so a not-yet-added portrait never renders as a broken image.
+  const [failed, setFailed] = useState(false);
+  const showPhoto = d.photo && !failed;
+
   return (
-    <div className="relative aspect-[3/4] w-[116px] shrink-0 overflow-hidden rounded-xl bg-[#ECE9E1] sm:w-[130px]">
-      {d.photo ? (
-        <Image src={d.photo} alt={d.name} fill sizes="130px" className="object-cover" />
+    <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden rounded-2xl bg-[#ECE9E1]">
+      {showPhoto ? (
+        <Image
+          src={d.photo as string}
+          alt={`Portrait of ${d.name}`}
+          fill
+          sizes="(min-width: 1024px) 340px, (min-width: 640px) 320px, 78vw"
+          className="object-cover"
+          style={{ objectPosition: d.focus ?? "50% 30%" }}
+          onError={() => setFailed(true)}
+        />
       ) : (
-        <div className="flex h-full w-full flex-col items-center justify-center">
-          <span className="font-serif text-3xl text-black/25">{d.initials}</span>
-          <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-black/25">
-            Portrait
-          </span>
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#EFEAE0] to-[#E3DCCD]">
+          <span className="font-display text-5xl text-[#C6BCA6]">{d.initials}</span>
         </div>
       )}
     </div>
@@ -25,28 +35,28 @@ function Portrait({ d }: { d: Doctor }) {
 
 function DoctorCard({ d }: { d: Doctor }) {
   return (
-    <article className="flex w-[80vw] max-w-[380px] shrink-0 items-start gap-5 border-l border-black/[0.08] pl-6 sm:w-[400px] lg:w-[440px] lg:max-w-none lg:pl-10">
+    <article className="flex w-[78vw] max-w-[290px] shrink-0 flex-col sm:w-[304px] lg:w-[324px] lg:max-w-none">
       <Portrait d={d} />
-      <div className="min-w-0 pt-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/40">
+
+      <div className="mt-5">
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B4370F]">
           {d.affiliation}
         </p>
-        <h3 className="mt-3 font-serif text-lg font-normal leading-snug text-[#18181B]">
+        <h3 className="mt-2 font-serif text-[1.35rem] font-normal leading-tight text-[#18181B]">
           {d.name}
         </h3>
         <p className="mt-0.5 font-sans text-[13px] text-black/55">{d.role}</p>
-        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-black/35">
+        <p className="mt-2 font-mono text-[9.5px] uppercase leading-relaxed tracking-[0.1em] text-black/35">
           {d.credentials}
         </p>
-        <p className="mt-4 font-sans text-[13.5px] leading-relaxed text-black/70">
+        <p className="mt-3 line-clamp-3 font-sans text-[12.5px] leading-relaxed text-black/65">
           {d.blurb}
         </p>
-        <a
-          href="#start"
-          className="mt-4 inline-block font-sans text-[13px] text-[#18181B] underline decoration-black/30 underline-offset-4 transition-colors hover:decoration-[#ED5B2D]"
-        >
-          Learn more
-        </a>
+        {d.languages && (
+          <p className="mt-2.5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-black/30">
+            {d.languages}
+          </p>
+        )}
       </div>
     </article>
   );
@@ -54,7 +64,7 @@ function DoctorCard({ d }: { d: Doctor }) {
 
 function ClosingCard() {
   return (
-    <article className="flex w-[80vw] max-w-[340px] shrink-0 flex-col justify-center border-l border-black/[0.08] pl-6 sm:w-[360px] lg:w-[400px] lg:max-w-none lg:pl-10">
+    <article className="flex w-[78vw] max-w-[280px] shrink-0 flex-col justify-center sm:w-[300px] lg:w-[340px] lg:max-w-none">
       <p className="font-serif text-xl font-normal leading-snug text-[#18181B]">
         Every Meta Me roadmap is signed off by a clinician before it reaches you.
       </p>
@@ -114,7 +124,7 @@ export default function Doctors() {
       ref={track}
       id="doctors"
       className={`relative border-t border-black/[0.06] bg-[#FBF8F1] ${
-        pan ? "h-[250vh] lg:h-[200vh]" : ""
+        pan ? "h-[260vh] lg:h-[220vh]" : ""
       }`}
     >
       <div
@@ -141,14 +151,14 @@ export default function Doctors() {
           ref={viewport}
           className={
             pan
-              ? "mt-12 overflow-hidden lg:mt-16"
+              ? "mt-10 overflow-hidden lg:mt-14"
               : "no-scrollbar mt-10 snap-x snap-proximity overflow-x-auto pb-4"
           }
         >
           <motion.div
             ref={strip}
             style={pan ? { x } : undefined}
-            className="flex w-max gap-8 px-6 lg:gap-14 lg:px-12"
+            className="flex w-max items-start gap-6 px-6 lg:gap-12 lg:px-12"
           >
             {DOCTORS.map((d) => (
               <div key={d.slug} className={pan ? "" : "snap-start"}>
