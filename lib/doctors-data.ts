@@ -1,15 +1,12 @@
 /**
- * "Led by clinicians" section.
+ * "Led by clinicians" section. Ordered by seniority / experience.
  *
- * Ordered by seniority / experience. Portraits live in /public/images/ — drop
- * the four files listed in `photo` below (4:5 headshots crop best). Until a
- * file exists the card falls back to an initial monogram.
+ * Portraits are pre-cropped to 4:5 WebP in /public/images/ (doc-*.webp) so they
+ * drop straight into the card with no further cropping. `focus` still sets
+ * object-position for any photo that isn't already 4:5.
  *
- * `focus` sets object-position for the crop (default "50% 30%" favours the
- * face); tweak per photo if a face sits high or low in frame.
- *
- * NOTE: Dr. Deekshita's credentials/blurb are placeholders — replace with her
- * real Practo details.
+ * NOTE: Dr. Deekshita is not on the My Stree team page — credentials/blurb are
+ * placeholders and there is no portrait yet (falls back to a monogram).
  */
 export type Doctor = {
   slug: string;
@@ -35,8 +32,7 @@ export const DOCTORS: Doctor[] = [
     blurb:
       "High-risk obstetrics and in-utero fetal programming, with a focus on endocrine disorders, recurrent pregnancy loss and bad obstetric history. Care that goes beyond the illness — evidence-based medicine matched with personalised attention. Alumna of Dr. B. R. Ambedkar Medical College; member of BSOG and ISUOG.",
     languages: "English · Kannada · Tamil",
-    photo: "/images/doc-smitha.jpg",
-    focus: "50% 22%",
+    photo: "/images/doc-smitha.webp",
   },
   {
     slug: "surbhi-sinha",
@@ -47,8 +43,8 @@ export const DOCTORS: Doctor[] = [
     affiliation: "MRCOG, United Kingdom",
     blurb:
       "Expert in advanced surgical techniques and fertility solutions, known for precision and empathy. Prioritises faster recovery and minimal discomfort — cutting-edge technique with compassionate care.",
-    photo: "/images/doc-surbhi.jpg",
-    focus: "50% 25%",
+    languages: "English · Hindi",
+    photo: "/images/doc-surbhi.webp",
   },
   {
     slug: "priyanka-savina",
@@ -59,8 +55,8 @@ export const DOCTORS: Doctor[] = [
     affiliation: "Postpartum nutrition · PCOS management",
     blurb:
       "The architect of the seamless My Stree experience. Specialises in postpartum nutrition and PCOS management — from diet planning to lifestyle change, every step built around your body.",
-    photo: "/images/doc-priyanka.jpg",
-    focus: "50% 20%",
+    languages: "English · Hindi · Kannada",
+    photo: "/images/doc-priyanka.webp",
   },
   {
     slug: "deekshita",
@@ -71,7 +67,6 @@ export const DOCTORS: Doctor[] = [
     affiliation: "Women's health & preventive care",
     blurb:
       "Consultant obstetrician and gynaecologist on the Meta Me team, focused on preventive women's health and early metabolic risk. (Placeholder bio — replace with Practo details.)",
-    photo: "/images/doc-deekshita.jpg",
-    focus: "50% 28%",
+    focus: "50% 22%",
   },
 ];
