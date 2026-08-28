@@ -201,23 +201,52 @@ export const START = {
 export const FOOTER_LINE = "Meta Me — from reactive healthcare to proactive living";
 
 export const FOOTER = {
-  /* the statement, split so the last two words can take the Playfair italic */
-  headline: "From reactive healthcare to",
-  headlineAccent: "proactive living.",
-  body: "Meta Me is the preventive-health program of My Stree. Eleven biological systems, read together by a clinician, in one visit.",
-  navLabel: "Find your way",
-  nav: [
-    { label: "The eleven systems", href: "#systems" },
-    { label: "How the loop works", href: "#journey" },
-    { label: "The protocol", href: "#protocol" },
-    { label: "Our clinicians", href: "#doctors" },
-    { label: "Questions", href: "#faqs" },
+  /* one-line statement, sits under the lockup */
+  blurb:
+    "The preventive-health program of My Stree. Eleven biological systems, read together by a clinician, in a single visit.",
+
+  /* the closing invitation, above the columns */
+  cta: { label: "Book a screening", href: "#start" },
+
+  /* link columns — kept to three so nothing reads as a link dump */
+  columns: [
+    {
+      title: "This program",
+      links: [
+        { label: "The eleven systems", href: "#systems" },
+        { label: "How the loop works", href: "#journey" },
+        { label: "The protocol", href: "#protocol" },
+        { label: "Our clinicians", href: "#doctors" },
+        { label: "Common questions", href: "#faqs" },
+      ],
+    },
+    {
+      title: "My Stree",
+      links: [
+        { label: "mystree.org", href: "https://www.mystree.org" },
+        { label: "About My Stree", href: "https://www.mystree.org/about" },
+        { label: "Our doctors", href: "https://www.mystree.org/doctors" },
+        { label: "Specialized services", href: "https://www.mystree.org/services" },
+        { label: "Community impact", href: "https://www.mystree.org/community-impact" },
+        { label: "Careers", href: "https://www.mystree.org/careers" },
+      ],
+    },
+    {
+      title: "Contact",
+      links: [
+        { label: "info@mystree.org", href: "mailto:info@mystree.org" },
+        { label: "Instagram", href: "https://www.instagram.com/mystree.health" },
+        { label: "LinkedIn", href: "https://www.linkedin.com/company/mystree" },
+      ],
+    },
   ],
-  navCta: { label: "Book a screening", href: "#start" },
-  backToTop: "Back to top",
+
   legal: [
-    { label: "Privacy", href: "https://www.mystree.org/privacy" },
-    { label: "Terms", href: "https://www.mystree.org/terms" },
+    { label: "Privacy Policy", href: "https://www.mystree.org/privacy" },
+    { label: "Terms of Service", href: "https://www.mystree.org/terms" },
   ],
   copyright: "My Stree Healthcare",
+
+  /* the oversized closing wordmark */
+  wordmark: "metame",
 };

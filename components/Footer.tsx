@@ -68,8 +68,28 @@ function useClinicStatus() {
     open,
     label: open
       ? `Open now · until ${to12h(today!.closes)}`
-      : "Closed now · Mon–Fri 8 AM–8 PM, Sat 8 AM–5 PM",
+      : "Closed now · opens 8 AM",
   };
+}
+
+const isExternal = (href: string) => /^(https?:|mailto:|tel:)/.test(href);
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  const ext = isExternal(href);
+  return (
+    <a
+      href={href}
+      {...(ext && !href.startsWith("mailto:") && !href.startsWith("tel:")
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+      className="group inline-flex w-fit items-center gap-1.5 py-[5px] font-sans text-[13.5px] text-[#B9B4A8] transition-colors duration-200 hover:text-white"
+    >
+      <span className="h-px w-0 bg-[#FF833C] transition-all duration-300 group-hover:w-3.5" />
+      <span className="-ml-1.5 transition-all duration-300 group-hover:ml-0">
+        {children}
+      </span>
+    </a>
+  );
 }
 
 export default function Footer() {
@@ -86,8 +106,10 @@ export default function Footer() {
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const tel = `tel:${SITE.telephone.replace(/[^+\d]/g, "")}`;
+
   return (
-    <footer className="relative bg-[#121214] text-[#F5EFDC]">
+    <footer className="relative overflow-hidden bg-[#121214] text-[#F5EFDC]">
       {/* the flame CTA above burns down into the footer's night */}
       <div
         aria-hidden
@@ -98,13 +120,27 @@ export default function Footer() {
         }}
       />
 
-      <div className="mx-auto w-full max-w-[1400px] px-6 pb-10 pt-16 lg:px-12 lg:pt-20">
-        {/* ---------- asymmetric 70 / 30 ---------- */}
-        <div className="grid grid-cols-1 gap-12 border-b border-white/[0.09] pb-14 lg:grid-cols-12 lg:gap-16 lg:pb-16">
-          {/* left — the statement */}
-          <div className="lg:col-span-8">
+      <div className="mx-auto w-full max-w-[1400px] px-6 pt-14 lg:px-12 lg:pt-20">
+        {/* ── identity + link columns ──────────────────────────────── */}
+        <div className="grid gap-x-12 gap-y-12 border-b border-white/[0.08] pb-14 lg:grid-cols-12 lg:gap-y-0 lg:pb-16">
+          {/* left — who this is */}
+          <div className="lg:col-span-5">
+            <div className="flex items-center gap-3">
+              <span className="font-display text-2xl leading-none tracking-[-0.01em] text-white">
+                Meta&nbsp;Me
+              </span>
+              <span className="h-4 w-px bg-white/20" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8E8A81]">
+                a My Stree program
+              </span>
+            </div>
+
+            <p className="mt-5 max-w-[40ch] font-sans text-[13.5px] leading-relaxed text-[#A8A49A]">
+              {FOOTER.blurb}
+            </p>
+
             {/* live status, derived from the clinic's real opening hours */}
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/[0.12] bg-white/[0.04] px-3.5 py-1.5">
+            <div className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-white/[0.12] bg-white/[0.04] px-3.5 py-1.5">
               <span className="relative flex h-1.5 w-1.5">
                 {status?.open && (
                   <span
@@ -126,106 +162,85 @@ export default function Footer() {
               </span>
             </div>
 
-            <h2 className="mt-7 max-w-[16ch] font-display text-[clamp(2.1rem,5vw,4rem)] font-normal leading-[1.04] tracking-[-0.02em] text-white">
-              {FOOTER.headline}{" "}
-              <span className="accent-italic text-[#FF833C]">
-                {FOOTER.headlineAccent}
-              </span>
-            </h2>
-
-            <p className="mt-6 max-w-[46ch] font-sans text-sm leading-relaxed text-[#A8A49A]">
-              {FOOTER.body}
-            </p>
-
-            {/* NAP — the local-search anchor, set as real editorial detail */}
-            <address className="mt-9 grid max-w-[560px] grid-cols-1 gap-x-10 gap-y-5 not-italic sm:grid-cols-2">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#7E7A72]">
-                  The clinic
-                </p>
-                <p className="mt-2 font-sans text-[13.5px] leading-relaxed text-[#E6E1D4]">
-                  {CLINIC.street}
-                  <br />
-                  {CLINIC.city} {CLINIC.postalCode}, {CLINIC.region}
-                </p>
-                <p className="mt-1.5 font-sans text-[12.5px] text-[#8E8A81]">
-                  Near {CLINIC.landmarks.join(" · ")}
-                </p>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#7E7A72]">
-                  Reach us
-                </p>
-                <a
-                  href={`tel:${SITE.telephone.replace(/[^+\d]/g, "")}`}
-                  className="mt-2 block font-sans text-[13.5px] text-[#E6E1D4] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white hover:decoration-[#FF833C]"
-                >
-                  {SITE.telephone}
-                </a>
-                <p className="mt-1.5 font-sans text-[12.5px] leading-relaxed text-[#8E8A81]">
-                  Mon–Fri 8 AM–8 PM
-                  <br />
-                  Saturday 8 AM–5 PM
-                </p>
-              </div>
+            {/* NAP — the local-search anchor */}
+            <address className="mt-7 not-italic">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#7E7A72]">
+                The clinic
+              </p>
+              <p className="mt-2 font-sans text-[13.5px] leading-relaxed text-[#E6E1D4]">
+                {CLINIC.street}
+                <br />
+                {CLINIC.city} {CLINIC.postalCode}, {CLINIC.region}
+              </p>
+              <p className="mt-1.5 font-sans text-[12.5px] text-[#8E8A81]">
+                Near {CLINIC.landmarks.join(" · ")}
+              </p>
+              <a
+                href={tel}
+                className="mt-3 inline-block font-sans text-[13.5px] text-[#E6E1D4] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white hover:decoration-[#FF833C]"
+              >
+                {SITE.telephone.replace(/-/g, " ")}
+              </a>
+              <p className="mt-1 font-sans text-[12.5px] text-[#8E8A81]">
+                Mon–Fri 8 AM – 8 PM · Sat 8 AM – 5 PM
+              </p>
             </address>
           </div>
 
-          {/* right — one vertical stack, not a column dump */}
-          <div className="flex flex-col justify-between lg:col-span-4 lg:border-l lg:border-white/[0.09] lg:pl-14">
-            <nav aria-label="Footer">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#7E7A72]">
-                {FOOTER.navLabel}
-              </p>
-              <ul className="mt-5 space-y-0.5">
-                {FOOTER.nav.map((item) => (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      className="group flex items-baseline py-2 font-serif text-[17px] text-[#E6E1D4] transition-colors duration-200 hover:text-white"
-                    >
-                      {/* rule grows out of nothing, so the labels stay flush
-                          with the section label above them at rest */}
-                      <span className="h-px w-0 self-center bg-[#FF833C] transition-all duration-300 group-hover:mr-2.5 group-hover:w-4" />
-                      <span>{item.label}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={FOOTER.navCta.href}
-                className="group mt-6 inline-flex items-center gap-2 border-b border-[#FF833C]/40 pb-1 font-sans text-sm font-medium text-[#FF833C] transition-colors hover:border-[#FF833C]"
-              >
-                {FOOTER.navCta.label}
-                <span
-                  aria-hidden
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                >
-                  →
-                </span>
-              </a>
-            </nav>
-
-            <motion.button
-              type="button"
-              onClick={scrollToTop}
-              whileHover={reduce ? undefined : { scale: 1.03 }}
-              whileTap={reduce ? undefined : { scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 100, damping: 15 }}
-              style={{ willChange: "transform" }}
-              className="mt-12 flex w-full items-center justify-between gap-4 rounded-xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-left font-sans text-sm text-[#E6E1D4] transition-colors duration-300 hover:border-white/25 hover:bg-white/[0.08]"
-            >
-              <span>{FOOTER.backToTop}</span>
-              <span aria-hidden className="font-mono text-xs text-[#FF833C]">
-                ↑
-              </span>
-            </motion.button>
+          {/* right — three columns, evenly weighted */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:col-span-6 lg:col-start-7 lg:gap-x-10">
+            {FOOTER.columns.map((col) => (
+              <nav key={col.title} aria-label={col.title}>
+                <h3 className="font-display text-lg leading-none text-white">
+                  {col.title}
+                </h3>
+                <ul className="mt-4 flex flex-col">
+                  {col.links.map((l) => (
+                    <li key={l.href}>
+                      <FooterLink href={l.href}>{l.label}</FooterLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
           </div>
         </div>
 
-        {/* ---------- metadata bar ---------- */}
-        <div className="flex flex-col gap-4 pt-7 font-mono text-[10px] uppercase tracking-[0.16em] text-[#7E7A72] md:flex-row md:items-center md:justify-between">
+        {/* ── closing invitation + back to top ─────────────────────── */}
+        <div className="flex flex-col gap-6 py-9 sm:flex-row sm:items-center sm:justify-between">
+          <a
+            href={FOOTER.cta.href}
+            className="group inline-flex items-center gap-2.5 self-start rounded-full bg-[#ED5B2D] px-6 py-3 font-sans text-sm font-medium text-white transition-colors duration-200 hover:bg-[#d94f24]"
+          >
+            {FOOTER.cta.label}
+            <span
+              aria-hidden
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </a>
+
+          <motion.button
+            type="button"
+            onClick={scrollToTop}
+            whileHover={reduce ? undefined : { y: -2 }}
+            whileTap={reduce ? undefined : { scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 120, damping: 14 }}
+            className="inline-flex items-center gap-2 self-start font-mono text-[10px] uppercase tracking-[0.18em] text-[#8E8A81] transition-colors hover:text-[#F5EFDC] sm:self-auto"
+          >
+            <span
+              aria-hidden
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 text-[#FF833C]"
+            >
+              ↑
+            </span>
+            Back to top
+          </motion.button>
+        </div>
+
+        {/* ── meta bar ─────────────────────────────────────────────── */}
+        <div className="flex flex-col gap-4 border-t border-white/[0.08] py-7 font-mono text-[10px] uppercase tracking-[0.16em] text-[#7E7A72] md:flex-row md:items-center md:justify-between">
           <p>
             Indiranagar · IST{" "}
             <span
@@ -237,7 +252,7 @@ export default function Footer() {
           </p>
 
           <p className="tracking-[0.14em]">
-            © {new Date().getFullYear()} {FOOTER.copyright} · Meta Me
+            © {new Date().getFullYear()} {FOOTER.copyright}
           </p>
 
           <div className="flex gap-6">
@@ -245,12 +260,33 @@ export default function Footer() {
               <a
                 key={l.href}
                 href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="transition-colors hover:text-[#C9C5B8]"
               >
                 {l.label}
               </a>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* ── the closing wordmark — centred, bleeding past both edges ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none relative w-full select-none overflow-hidden pt-9 lg:pt-12"
+      >
+        <div className="relative left-1/2 w-max -translate-x-1/2">
+          <span
+            className="block whitespace-nowrap font-sans font-semibold leading-[0.82] text-[#F5EFDC]"
+            style={{
+              fontSize: "clamp(4rem, 30vw, 30rem)",
+              letterSpacing: "-0.05em",
+              marginBottom: "-0.06em",
+            }}
+          >
+            {FOOTER.wordmark}
+          </span>
         </div>
       </div>
     </footer>
