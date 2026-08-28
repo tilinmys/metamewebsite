@@ -5,8 +5,8 @@
  * drop straight into the card with no further cropping. `focus` still sets
  * object-position for any photo that isn't already 4:5.
  *
- * NOTE: Dr. Deekshita is not on the My Stree team page — credentials/blurb are
- * placeholders and there is no portrait yet (falls back to a monogram).
+ * NOTE: Dr. Deekshita is not on the My Stree team page — her credentials and
+ * blurb are still placeholders and need real detail.
  */
 export type Doctor = {
   slug: string;
@@ -67,6 +67,6 @@ export const DOCTORS: Doctor[] = [
     affiliation: "Women's health & preventive care",
     blurb:
       "Consultant obstetrician and gynaecologist on the Meta Me team, focused on preventive women's health and early metabolic risk. (Placeholder bio — replace with Practo details.)",
-    focus: "50% 22%",
+    photo: "/images/doc-deekshita.webp",
   },
 ];
